@@ -14,11 +14,69 @@ import DiaView from "../components/agenda/DiaView";
 import MesView from "../components/agenda/MesView";
 import SemanaView from "../components/agenda/SemanaView";
 
+const mockAppointments = [
+  {
+    idSessao: 1,
+    nomeCliente: "Alice",
+    data: new Date("2025-01-24T10:00:00"),
+    horario: new Date("2025-01-24T11:00:00"),
+    status: "agendada",
+    tatuador: {
+      idTatuador: 1,
+      nome: "Tatuador 1",
+    },
+  },
+  {
+    idSessao: 2,
+    nomeCliente: "Bob",
+    data: new Date("2025-01-24T12:00:00"),
+    horario: new Date("2025-01-02T13:00:00"),
+    status: "concluída",
+    tatuador: {
+      idTatuador: 2,
+      nome: "Tatuador 2",
+    },
+  },
+  {
+    idSessao: 3,
+    nomeCliente: "Bob",
+    data: new Date("2025-01-24T12:00:00"),
+    horario: new Date("2025-01-02T13:00:00"),
+    status: "concluída",
+    tatuador: {
+      idTatuador: 2,
+      nome: "Tatuador 2",
+    },
+  },
+  {
+    idSessao: 4,
+    nomeCliente: "Bob",
+    data: new Date("2025-01-24T12:00:00"),
+    horario: new Date("2025-01-02T13:00:00"),
+    status: "concluída",
+    tatuador: {
+      idTatuador: 2,
+      nome: "Tatuador 2",
+    },
+  },
+  {
+    idSessao: 5,
+    nomeCliente: "Bob",
+    data: new Date("2025-01-24T12:00:00"),
+    horario: new Date("2025-01-02T13:00:00"),
+    status: "concluída",
+    tatuador: {
+      idTatuador: 2,
+      nome: "Tatuador 2",
+    },
+  },
+];
 const Agenda = () => {
   const [view, setView] = useState(() => {
     return localStorage.getItem("agendaView") || "month";
   });
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [apoointments, setAppointments] = useState(mockAppointments);
 
   useEffect(() => {
     localStorage.setItem("agendaView", view);
@@ -103,9 +161,15 @@ const Agenda = () => {
         </div>
       </section>
 
-      {view === "month" && <MesView currentDate={currentDate} />}
-      {view === "week" && <SemanaView currentDate={currentDate} />}
-      {view === "day" && <DiaView currentDate={currentDate} />}
+      {view === "month" && (
+        <MesView currentDate={currentDate} apoointments={apoointments} />
+      )}
+      {view === "week" && (
+        <SemanaView currentDate={currentDate} apoointments={apoointments} />
+      )}
+      {view === "day" && (
+        <DiaView currentDate={currentDate} apoointments={apoointments} />
+      )}
     </div>
   );
 };
