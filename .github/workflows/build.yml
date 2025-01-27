@@ -1,0 +1,40 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: frontend
+
+      - name: Build the app
+        run: npm run build
+        working-directory: frontend
+
+      - name: Package the app
+        run: npm run package
+        working-directory: frontend
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: electron-app
+          path: frontend/dist/
