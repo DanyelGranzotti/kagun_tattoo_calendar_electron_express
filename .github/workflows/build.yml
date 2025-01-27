@@ -24,24 +24,12 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.GHCR_PAT }}
 
       - name: Build and push backend image
         run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/kagun_backend:latest -f backend/Dockerfile backend
-          docker push ghcr.io/${{ github.repository_owner }}/kagun_backend:latest
-
-      - name: Build and push frontend image
-        run: |
-          docker build -t ghcr.io/${{ github.repository_owner }}/kagun_frontend:latest -f frontend/Dockerfile frontend
-          docker push ghcr.io/${{ github.repository_owner }}/kagun_frontend:latest
-
-      - name: Build frontend with Docker
-        run: |
-          docker build -t frontend-build -f frontend/Dockerfile.build frontend
-          docker create --name extract frontend-build
-          docker cp extract:/usr/app/dist ./frontend/dist
-          docker rm -f extract
+          docker build -t ghcr.io/danyelgranzotti/kagun_backend:latest -f backend/Dockerfile backend
+          docker push ghcr.io/danyelgranzotti/kagun_backend:latest
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
@@ -76,7 +64,7 @@ jobs:
       - name: Create GitHub Release
         uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
@@ -88,7 +76,7 @@ jobs:
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: frontend/dist/
@@ -98,7 +86,7 @@ jobs:
       - name: Upload Executable
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GHCR_PAT }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: frontend/dist-electron/win-unpacked/
